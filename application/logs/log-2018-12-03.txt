@@ -1,0 +1,26 @@
+ERROR - 2018-12-03 19:06:05 --> ae lafo mari dais xD   SELECT c.companyName, count(*) as num FROM [Group0504_03.Company] c 
+			JOIN 
+				[Group0504_03.Career] ca
+				ON c.companyId=ca.companyId
+				JOIN
+				[Group0504_03.Apply] a
+				ON ca.careerNo=a.careerNo
+				WHERE 
+				a.stdId in (
+					SELECT stdId FROM [Group0504_03.Student] s where uniId='010'
+				)
+				GROUP BY c.companyName
+ERROR - 2018-12-03 19:15:00 --> ae lafo mari dais xD SELECT co.companyId, companyName, city, state, companyEmail, careerName, careerDescription, postingDate, closingDate, jobType FROM [Group0504_03.Company] co JOIN [Group0504_03.Career] ca ON co.companyId=ca.companyId WHERE co.companyName='Google' AND co.city ='San Francisco' AND co.state='CA' AND ca.postingDate <='12/26/2019' AND ca.postingDate>='12/19/2012'
+ERROR - 2018-12-03 19:21:58 --> SELECT co.companyId, companyName, city, state, companyEmail, eventName, eventDescription, eventTime, closingDate, eventLocation FROM [Group0504_03.Company] co JOIN [Group0504_03.CareerEvent] ca ON co.companyId=ca.companySponsor WHERE UPPER(ca.eventName) like UPPER('%Ne%') AND ca.eventLocation='Van Munching Hall 1333'
+ERROR - 2018-12-03 19:22:21 --> ae lafo mari dais xD   SELECT c.companyName, count(*) as num FROM [Group0504_03.Company] c 
+			JOIN 
+				[Group0504_03.Career] ca
+				ON c.companyId=ca.companyId
+				JOIN
+				[Group0504_03.Apply] a
+				ON ca.careerNo=a.careerNo
+				WHERE 
+				a.stdId in (
+					SELECT stdId FROM [Group0504_03.Student] s where uniId='010'
+				)
+				GROUP BY c.companyName
