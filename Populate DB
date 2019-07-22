@@ -1,0 +1,232 @@
+Use BUDT758_DB_0504_03;
+
+--**********DROP TABLE STATEMENTS**********
+DROP TABLE [Group0504_03.Participate];
+DROP TABLE [Group0504_03.CareerEvent];
+DROP TABLE [Group0504_03.Apply];
+DROP TABLE [Group0504_03.Job];
+DROP TABLE [Group0504_03.Internship];
+DROP TABLE [Group0504_03.Career];
+DROP TABLE [Group0504_03.Company];
+DROP TABLE [Group0504_03.Student];
+DROP TABLE [Group0504_03.University];
+
+--**********CREATE TABLE STATEMENTS*******
+
+ CREATE TABLE [Group0504_03.University] (
+	uniId CHAR(3) NOT NULL, 
+	uniName VARCHAR(50), 
+	street VARCHAR(50), 
+	city VARCHAR(20), 
+	state CHAR(2), 
+	zipCode NUMERIC(5),
+	CONSTRAINT University_PK PRIMARY KEY (uniId)
+);
+CREATE TABLE [Group0504_03.Student] (
+	stdId CHAR(5) NOT NULL, 
+	fName VARCHAR(20), 
+	lName VARCHAR(20), 
+	stdPhone NUMERIC(10), 
+	street VARCHAR(50), 
+	city VARCHAR(20), 
+	state CHAR(2), 
+	zipCode NUMERIC(5), 
+	stdEmail VARCHAR(50), 
+	uniId CHAR(3),
+	CONSTRAINT Student_PK PRIMARY KEY (stdId),
+	CONSTRAINT Student_FK_1 FOREIGN KEY (uniId) REFERENCES [Group0504_03.University] (uniId)
+);
+
+CREATE TABLE [Group0504_03.Company] (
+	companyId NUMERIC IDENTITY(10000,1) NOT NULL, 
+	companyName NVARCHAR(MAX), 
+	street VARCHAR(50), 
+	city VARCHAR(20), 
+	state CHAR(2), 
+	zipCode NVARCHAR(MAX), 
+	companyPhone CHAR(10), 
+	companyEmail VARCHAR(50),
+	CONSTRAINT Company_PK PRIMARY KEY (companyId)
+);
+
+CREATE TABLE [Group0504_03.Career] (
+	careerNo NUMERIC IDENTITY(250,1) NOT NULL, 
+	companyId NUMERIC, 
+	careerName VARCHAR(50), 
+	careerDescription VARCHAR(250), 
+	postingDate Date, 
+	closingDate Date,
+	jobType CHAR(1), 
+	CONSTRAINT Career_PK PRIMARY KEY (careerNo),
+	CONSTRAINT Career_FK_1 FOREIGN KEY (companyId) REFERENCES [Group0504_03.Company](companyId)
+);
+
+CREATE TABLE [Group0504_03.Internship] (
+	careerNo NUMERIC, 
+	Duration NUMERIC(3), 
+	Stipend NUMERIC(9,2),
+	CONSTRAINT Internship_FK_1 FOREIGN KEY (careerNo) REFERENCES [Group0504_03.Career](careerNo)
+);
+
+CREATE TABLE [Group0504_03.Job] (
+	careerNo NUMERIC, 
+	jobType VARCHAR(50), 
+	Salary NVARCHAR(MAX),
+	CONSTRAINT Job_FK_1 FOREIGN KEY (careerNo) REFERENCES [Group0504_03.Career](careerNo)
+);
+
+CREATE TABLE [Group0504_03.Apply] (
+	stdId CHAR(5) NOT NULL, 
+	careerNo NUMERIC NOT NULL, 
+	applicationTime Datetime,
+	CONSTRAINT Apply_PK PRIMARY KEY (stdId, careerNo),
+	CONSTRAINT Apply_FK_1 FOREIGN KEY (stdId) REFERENCES  [Group0504_03.Student](stdId),
+	CONSTRAINT Apply_FK_2 FOREIGN KEY (careerNo) REFERENCES  [Group0504_03.Career](careerNo)
+);
+
+CREATE TABLE [Group0504_03.CareerEvent] (
+	eventNo NUMERIC IDENTITY(301,1) NOT NULL, 
+	companySponsor NUMERIC NOT NULL, 
+	eventName VARCHAR(50), 
+	eventDescription VARCHAR(250), 
+	eventTime datetime, 
+	eventLocation VARCHAR(50), 
+	closingDate Date,
+	CONSTRAINT CareerEvent_PK PRIMARY KEY (eventNo),
+	CONSTRAINT CareerEvent_FK_1 FOREIGN KEY (companySponsor) REFERENCES  [Group0504_03.Company](companyId),
+);
+
+CREATE TABLE [Group0504_03.Participate] (
+	stdId CHAR(5) NOT NULL, 
+	eventNo NUMERIC NOT NULL, 
+	registrationTime datetime,
+	CONSTRAINT Participate_PK PRIMARY KEY (stdId, eventNo),
+	CONSTRAINT Participate_FK_1 FOREIGN KEY (stdId) REFERENCES  [Group0504_03.Student](stdId),
+	CONSTRAINT Participate_FK_2 FOREIGN KEY (eventNo) REFERENCES  [Group0504_03.CareerEvent](eventNo)
+);
+
+ 
+--**********SQL INSERT INTO STATEMENTS**********
+
+University
+INSERT INTO [Group0504_03.University](uniId, uniName, street,city, State, zipCode)
+	VALUES ('010', 'University of Maryland', '8501 Reseach Blvd', 'College Park', 'MD', 20742);
+
+INSERT INTO [Group0504_03.University](uniId, uniName, street,city, State, zipCode)
+	VALUES ('020', 'University of District of Columbia', '3001 Connecticut Ave NW', 'Washington, D.C.', 'DC', 20007);
+
+INSERT INTO [Group0504_03.University](uniId, uniName, street,city, State, zipCode)
+	VALUES ('030', 'University of Maryland', '100 Halsey Rd', 'Baltimore', 'MD', 21021);
+
+INSERT INTO [Group0504_03.University](uniId, uniName, street,city, State, zipCode)
+	VALUES ('040', 'University of Northern Virginia', '400 Braddock Rd', 'Reston', 'VA', 20222);
+
+INSERT INTO [Group0504_03.University](uniId, uniName, street,city, State, zipCode)
+	VALUES ('050', 'Georgetown University', '3700 Reservoir Rd', 'Washington, D.c.', 'DC', 20057);
+
+INSERT INTO [Group0504_03.University](uniId, uniName, street,city, State, zipCode)
+	VALUES ('060', 'George Washingting University', '2121 Eye Street', 'Washington, D.C.', 'DC', 20017);
+
+ 
+Student
+
+INSERT INTO [Group0504_03.Student] (stdId, fName, lName, stdPhone, street, city, state, zipCode, stdEmail, uniId)
+	VALUES ('16970', 'Latifat', 'Braimah', 2025695141, '2300 Good Hope Rd', 'Washington, D.C.', 'DC', 20020, 'latifat.braimah@rhsmith.umd.edu', '010');
+
+INSERT INTO [Group0504_03.Student] (stdId, fName, lName, stdPhone, street, city, state, zipCode, stdEmail, uniId)
+	VALUES ('18982', 'John', 'Miller', 2405695141, '1001 Baltimore Ave', 'Baltimore', 'MD', 21021, 'john.t.miller@rhsmith.umd.edu', '010');
+
+INSERT INTO [Group0504_03.Student] (stdId, fName, lName, stdPhone, street, city, state, zipCode, stdEmail, uniId)
+	VALUES ('86975', 'Mike', 'Harrah', 2025000000, '4000 Prospect Str', 'Washington, D.C.', 'DC', 20007, 'mike247@georgetown.edu', '050');
+
+INSERT INTO [Group0504_03.Student] (stdId, fName, lName, stdPhone, street, city, state, zipCode, stdEmail, uniId)
+	VALUES ('26170', 'Hannah', 'Montana', 2010000000, '1616 Rosslyn Park Rd', 'Rosslyn', 'VA', 20020, 'montana13@nova.edu', '040');
+
+INSERT INTO [Group0504_03.Student] (stdId, fName, lName, stdPhone, street, city, state, zipCode, stdEmail, uniId)
+	VALUES ('46910', 'Van', 'Nguyen', 3012005000, '3751 Baltimore Ave', 'College Park', 'MD', 20742, 'van.nguyen@rhsmith.umd.edu', '010');
+
+INSERT INTO [Group0504_03.Student] (stdId, fName, lName, stdPhone, street, city, state, zipCode, stdEmail, uniId)
+	VALUES ('14102', 'Anket', 'Yadav', 3016612300, '1542 Halsey Rd', 'Baltimore', 'MD', 21020, 'akit123@umd.edu', '030');
+ 
+Company
+INSERT INTO [Group0504_03.Company] ( companyName, street, city, "state", zipCode, companyPhone, companyEmail)
+	VALUES ( 'Google', 'MountainView Road', 'San Francisco', 'CA', 27082, '5012339174', 'latifat.braimah@rhsmith.umd.edu');
+INSERT INTO [Group0504_03.Company] ( companyName, street, city, "state", zipCode, companyPhone, companyEmail)
+	VALUES ( 'VanCompany', 'Van Street', 'Gaithersburg', 'MD', 27082, '3350291174', 'vancompany@vannguyen.com');
+INSERT INTO [Group0504_03.Company] ( companyName, street, city, "state", zipCode, companyPhone, companyEmail)
+	VALUES ( 'Agile Technology', 'Wells Pkway', 'Hyattsville', 'MD', 27082, '3023591174', 'contact@agiletech.com');
+INSERT INTO [Group0504_03.Company] ( companyName, street, city, "state", zipCode, companyPhone, companyEmail)
+	VALUES ( 'PC Tech Zone', '1808 Ruatan St', 'Hyattsville', 'MD', 27082, '3023225974', 'contact@pctch.com');
+INSERT INTO [Group0504_03.Company] ( companyName, street, city, "state", zipCode, companyPhone, companyEmail)
+	VALUES ( 'Terrapin Technology Store', '1500 Langley Park', 'Hyattsville', 'MD', 27081, '3023274111', 'contact@trp.com');
+INSERT INTO [Group0504_03.Company] ( companyName, street, city, "state", zipCode, companyPhone, companyEmail)
+	VALUES ( 'Allied Tech Group', '1100 Arlington Ave', 'Fort Meyer', 'VA', 22209, '4553274111', 'contact@alliedtech.com');
+INSERT INTO [Group0504_03.Company] ( companyName, street, city, "state", zipCode, companyPhone, companyEmail)
+	VALUES ( 'Allied Technology Group (DC Branch)', '600 Maryland Ave', 'Washington DC', 'DC', 20024, '3653274111', 'contact@alliedtech.com');
+
+ 
+Career
+INSERT INTO [Group0504_03.Career] (companyId, careerName, careerDescription, postingDate, closingDate, jobType) VALUES ('10001','Business Analytics', 'To entice young men and women to join our awesome company', '2018/11/26 19:00:00','2019/11/26 19:00:00','J');
+INSERT INTO [Group0504_03.Career] (companyId, careerName, careerDescription, postingDate, closingDate, jobType) VALUES ('10002','Software Engineers', 'We code to save lives', '2018/11/26 13:10:00','2020/10/10 19:00:00','J');
+INSERT INTO [Group0504_03.Career] (companyId, careerName, careerDescription, postingDate, closingDate, jobType) VALUES ('10003','Data Person', 'This employee will play around with data and ensure data quality', '2018/09/26 19:00:00','2019/10/31 19:00:00','I');
+INSERT INTO [Group0504_03.Career] (companyId, careerName, careerDescription, postingDate, closingDate, jobType) VALUES ('10004','Legal Intern', 'We need dynamic graduates to further our companies interest', '2018/11/26 19:00:00','2018/12/26 19:00:00','I');
+INSERT INTO [Group0504_03.Career] (companyId, careerName, careerDescription, postingDate, closingDate, jobType) VALUES ('10001','Wifi Specialist', 'Diagnose Network Errors', '2018/11/26 19:00:00','2019/11/26 19:00:00','J');
+INSERT INTO [Group0504_03.Career] (companyId, careerName, careerDescription, postingDate, closingDate, jobType) VALUES ('10002','Bus Driver Automation', 'Automate Bus Driving for School Kids', '2018/11/26 13:10:00','2020/10/10 19:00:00','J');
+INSERT INTO [Group0504_03.Career] (companyId, careerName, careerDescription, postingDate, closingDate, jobType) VALUES ('10003','Manual Laborer', 'This employee will perform carpentry', '2018/09/26 19:00:00','2019/10/21 19:00:00','I');
+INSERT INTO [Group0504_03.Career] (companyId, careerName, careerDescription, postingDate, closingDate, jobType) VALUES ('10001','Typist', 'We need a typist to write whatever the boss dictates', '2018/11/26 19:00:00','2018/12/26 19:00:00','I');
+INSERT INTO [Group0504_03.Career] (companyId, careerName, careerDescription, postingDate, closingDate, jobType) VALUES ('10001','Statistician', 'Demand and Supply Calculations', '2018/11/26 19:00:00','2019/11/26 19:00:00','J');
+INSERT INTO [Group0504_03.Career] (companyId, careerName, careerDescription, postingDate, closingDate, jobType) VALUES ('10006','Data Mining Engineer', 'Create new product demand with new techniques', '2018/11/26 13:10:00','2020/10/10 19:00:00','J');
+INSERT INTO [Group0504_03.Career] (companyId, careerName, careerDescription, postingDate, closingDate, jobType) VALUES ('10003','Network Engineer', 'This employee will perform Network administration', '2018/09/26 19:00:00','2019/10/21 19:00:00','I');
+INSERT INTO [Group0504_03.Career] (companyId, careerName, careerDescription, postingDate, closingDate, jobType) VALUES ('10001','Coffee Maker', 'We need a student to make delicious coffee and print papers', '2018/11/26 19:00:00','2018/12/26 19:00:00','I');
+ 
+Internship
+INSERT INTO [Group0504_03.Internship] (careerNo, duration, stipend) VALUES (251, 12, 5000);
+INSERT INTO [Group0504_03.Internship] (careerNo, duration, stipend) VALUES (252, 12, 200);
+INSERT INTO [Group0504_03.Internship] (careerNo, duration, stipend) VALUES (257, 12, 5000);
+INSERT INTO [Group0504_03.Internship] (careerNo, duration, stipend) VALUES (258, 12, 200);
+INSERT INTO [Group0504_03.Internship] (careerNo, duration, stipend) VALUES (261, 12, 5000);
+INSERT INTO [Group0504_03.Internship] (careerNo, duration, stipend) VALUES (265, 12, 200);
+INSERT INTO [Group0504_03.Internship] (careerNo, duration, stipend) VALUES (266, 12, 5000);
+
+Job
+INSERT INTO [Group0504_03.Job]
+(careerNo, jobType, salary) VALUES (253, 'Full-Time', 5000);
+INSERT INTO [Group0504_03.Job] (careerNo, jobType, salary) VALUES (254, 'Full-Time', 2000);
+INSERT INTO [Group0504_03.Job]
+(careerNo, jobType, salary) VALUES (255, 'Full-Time', 12000);
+INSERT INTO [Group0504_03.Job] (careerNo, jobType, salary) VALUES (256, 'Full-Time', 4000);
+INSERT INTO [Group0504_03.Job]
+(careerNo, jobType, salary) VALUES (259, 'Full-Time', 12000);
+INSERT INTO [Group0504_03.Job] (careerNo, jobType, salary) VALUES (260, 'Full-Time', 4000);
+INSERT INTO [Group0504_03.Job]
+(careerNo, jobType, salary) VALUES (263, 'Full-Time', 12000);
+INSERT INTO [Group0504_03.Job] (careerNo, jobType, salary) VALUES (264, 'Full-Time', 4000);
+
+Apply
+INSERT INTO [Group0504_03.Apply] (stdId, careerNo, applicationTime) VALUES ( 14102, 251, '2018/11/26 00:00:00')
+INSERT INTO [Group0504_03.Apply] (stdId, careerNo, applicationTime) VALUES ( 16970, 252, '2018/11/01 10:00:00')
+INSERT INTO [Group0504_03.Apply] (stdId, careerNo, applicationTime) VALUES ( 18982, 253, '2018/11/08 15:51:30')
+INSERT INTO [Group0504_03.Apply] (stdId, careerNo, applicationTime) VALUES ( 86975, 254, '2018/11/18 18:27:30')
+
+ 
+CareerEvent
+INSERT INTO [Group0504_03.CareerEvent] (companySponsor, eventName, eventDescription, eventTime, eventLocation, closingDate) VALUES ('10001','Networking for Dummies','Welcome one welcome all dummies- First come first served','2018-11-11 00:00:00', 'Van Munching Hall 1333', '2018-11-12 00:00:00');
+INSERT INTO [Group0504_03.CareerEvent] (companySponsor, eventName, eventDescription, eventTime, eventLocation, closingDate) VALUES ('10003','Ping pong party','Peoples pets play ping pong (PPPP)','2018-12-01 00:00:00', 'Van Munching Hall 1300', '2018-12-02 00:00:00');
+
+
+Participate
+INSERT INTO [Group0504_03.Participate] (stdId, eventNo, registrationTime) VALUES ('26170','301','2018-10-31 00:00:00')
+
+ INSERT INTO [Group0504_03.Participate] (stdId, eventNo, registrationTime) VALUES ('14102','302','2018-11-01 00:00:00')
+
+
+--**********SQL SELECT COUNT(*) STATEMENTS********
+SELECT COUNT(*) FROM [Group0504_03.Participate];
+SELECT COUNT(*) FROM [Group0504_03.CareerEvent];
+SELECT COUNT(*) FROM [Group0504_03.Company];
+SELECT COUNT(*) FROM [Group0504_03.Apply];
+SELECT COUNT(*) FROM [Group0504_03.Job];
+SELECT COUNT(*) FROM [Group0504_03.Internship];
+SELECT COUNT(*) FROM [Group0504_03.Career];
+SELECT COUNT(*) FROM [Group0504_03.Student];
+SELECT COUNT(*) FROM [Group0504_03.University];
